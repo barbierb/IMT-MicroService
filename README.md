@@ -14,7 +14,35 @@ L'appliation est une todo list
  - systeme de login
   - email
   - mot de passe
-  - base de donnée
+### Base de donnée
+> CREATE TABLE category (
+> id INT,
+> id_user INT,
+> name VARCHAR(45),
+> emoji VARCHAR(1),
+> PRIMARY KEY (id,id_user));
+
+> CREATE TABLE element (
+> id INT,
+> id_user INT NOT NULL,
+> id_category INT NOT NULL,
+> id_priority INT NOT NULL,
+> date_start BIGINT NULL,
+> date_end BIGINT NOT NULL,
+> description VARCHAR(255),
+> state BIT NOT NULL,
+> PRIMARY KEY (id));
+
+> CREATE TABLE user (
+> id INT,
+> login VARCHAR(250),
+> password VARCHAR(250),
+> PRIMARY KEY (id));
+
+> CREATE TABLE priority (
+> id INT,
+> name VARCHAR(45),
+> PRIMARY KEY (id));
 
 - interface web
 
