@@ -9,12 +9,16 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import fr.projetimt.entities.User;
 import fr.projetimt.repositories.UserRepository;
+import fr.projetimt.utils.UserSecured;
 
-@Path("users")
-public class UserResource {
+@Path("user")
+public class UserResource implements UserDetailsService {
 	
 	@Autowired
 	private UserRepository userRepository;
@@ -26,5 +30,17 @@ public class UserResource {
 		userRepository.findAll().forEach(users::add);
 		return users;
 	}
+
+	@Override
+    public UserDetails loadUserByUsername(String username)
+            throws UsernameNotFoundException {
+        User user = userRepository.getUserByUsername(username);
+         
+        if (user == null) {
+            throw new UsernameNotFoundException("Could not find user");
+        }
+         
+        return new UserSecured(user);
+    }
 
 }

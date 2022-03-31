@@ -1,4 +1,4 @@
-package fr.itspower.referenceproject;
+package fr.projetimt.utils;
 
 import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.container.ContainerResponseContext;

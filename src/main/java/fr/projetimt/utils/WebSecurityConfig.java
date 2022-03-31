@@ -1,28 +1,52 @@
 package fr.projetimt.utils;
 
-import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.context.annotation.*;
+import org.springframework.security.authentication.dao.*;
+import org.springframework.security.config.annotation.authentication.builders.*;
+import org.springframework.security.config.annotation.web.builders.*;
+import org.springframework.security.config.annotation.web.configuration.*;
+import org.springframework.security.core.userdetails.*;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+import fr.projetimt.resources.UserResource;
+ 
 @Configuration
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
  
+    @Bean
+    public UserDetailsService userDetailsService() {
+        return new UserResource();
+    }
+     
+    @Bean
+    public BCryptPasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+     
+    @Bean
+    public DaoAuthenticationProvider authenticationProvider() {
+        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
+        authProvider.setUserDetailsService(userDetailsService());
+        authProvider.setPasswordEncoder(passwordEncoder());
+         
+        return authProvider;
+    }
+ 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.jdbcAuthentication().
-        https://www.codejava.net/frameworks/spring-boot/http-basic-authentication-with-in-memory-users
-        	https://www.baeldung.com/spring-security-jdbc-authentication
-        		https://www.google.com/search?q=jpa+spring+basic+http&rlz=1C1GCEU_frDE925DE925&oq=jpa+spring+basic+http&aqs=chrome..69i57j33i22i29i30l2.3584j0j4&sourceid=chrome&ie=UTF-8
+        auth.authenticationProvider(authenticationProvider());
     }
  
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
-            .anyRequest().authenticated()
+            .anyRequest().permitAll()
             .and()
-            .httpBasic();
-    }  
+            .formLogin().permitAll()
+            .and()
+            .formLogin().permitAll()
+            .and()
+            .logout().permitAll();
+    }
 }

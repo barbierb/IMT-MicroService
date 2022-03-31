@@ -9,8 +9,10 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.Table;
 
 @Entity
+@Table(name = "users")
 public class User {
 	
 	@Id
@@ -20,6 +22,8 @@ public class User {
 	private String login;
 	
 	private String password;
+	
+    private String role;
 	
 	@OneToMany(cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
 	private List<Category> categories;
@@ -50,5 +54,9 @@ public class User {
 
 	public Long getId() {
 		return id;
+	}
+
+	public String getRole() {
+		return role;
 	}
 }
