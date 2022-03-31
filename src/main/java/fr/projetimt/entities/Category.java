@@ -20,8 +20,8 @@ public class Category {
 	private String name;
 	
 	private String emoji;
-	
-	@OneToMany(cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
+
+	@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER)
 	private List<Element> elements;
 
 	public String getName() {

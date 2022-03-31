@@ -10,6 +10,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 @Entity
 @Table(name = "users")
@@ -23,9 +24,9 @@ public class User {
 	
 	private String password;
 	
-    private String role;
+    private String role = "USER";
 	
-	@OneToMany(cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
+	@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER)
 	private List<Category> categories;
 
 	public String getLogin() {
@@ -47,6 +48,14 @@ public class User {
 	public List<Category> getCategories() {
 		return categories;
 	}
+	
+	public Category getCategoryById(Long id) throws Exception {
+		
+		for(Category c : categories)
+			if(c.getId() == id)
+				return c;
+		throw new Exception();
+	}
 
 	public void setCategories(List<Category> categories) {
 		this.categories = categories;
@@ -59,4 +68,11 @@ public class User {
 	public String getRole() {
 		return role;
 	}
+
+	@Override
+	public String toString() {
+		return "User [id=" + id + ", login=" + login + ", password=" + password + ", role=" + role + ", categories="
+				+ categories + "]";
+	}
+	
 }

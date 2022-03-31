@@ -1,6 +1,7 @@
 package fr.projetimt.utils;
 
 import org.springframework.context.annotation.*;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.dao.*;
 import org.springframework.security.config.annotation.authentication.builders.*;
 import org.springframework.security.config.annotation.web.builders.*;
@@ -13,10 +14,11 @@ import fr.projetimt.resources.UserResource;
 @Configuration
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
- 
+	
     @Bean
     public UserDetailsService userDetailsService() {
-        return new UserResource();
+    	UserDetailsService ures = new UserResource();
+        return ures;
     }
      
     @Bean
@@ -29,7 +31,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
         authProvider.setUserDetailsService(userDetailsService());
         authProvider.setPasswordEncoder(passwordEncoder());
-         
+        
         return authProvider;
     }
  
@@ -40,13 +42,15 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
  
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.authorizeRequests()
-            .anyRequest().permitAll()
-            .and()
-            .formLogin().permitAll()
-            .and()
-            .formLogin().permitAll()
-            .and()
-            .logout().permitAll();
+    	http.cors().and().csrf().disable()
+    	.authorizeRequests()
+			.antMatchers(HttpMethod.POST, "/api/user").permitAll()
+    		//.antMatchers(HttpMethod.GET, "/api/user").hasRole("ADMIN") on aura essayé :'(
+	    	.antMatchers("/api/**").authenticated()
+	    	.antMatchers("/**").permitAll()
+	    	.anyRequest().authenticated()
+    	.and().formLogin().permitAll()
+    	.and().logout().logoutSuccessUrl("/").permitAll()
+    	.and().httpBasic();
     }
 }
