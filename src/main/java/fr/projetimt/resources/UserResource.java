@@ -24,6 +24,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import fr.projetimt.entities.Category;
+import fr.projetimt.entities.Element;
 import fr.projetimt.entities.User;
 import fr.projetimt.repositories.UserRepository;
 import fr.projetimt.utils.UserSecured;
@@ -139,6 +140,87 @@ public class UserResource implements UserDetailsService {
 		}
 		
 		u.getCategories().remove(c);
+		userRepository.save(u);
+		return Response.ok("ok").build();
+	}
+
+	@GET
+	@Path("{id}/cat/{catid}/elem")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response addElement(@PathParam("id") Long id, @PathParam("catid") Long catid) {
+
+		Optional<User> uOpt = userRepository.findById(id);
+		if (!uOpt.isPresent()) {
+			return Response.status(Response.Status.CONFLICT).entity("User not found, strange because you are connected.").build();
+		}
+		User u = uOpt.get();
+		
+		Category c = null;
+		
+		try {
+			c = u.getCategoryById(catid);
+		} catch (Exception ex) {
+			return Response.status(Response.Status.CONFLICT).entity("Category not found.").build();
+		}
+		
+		return Response.ok(c.getElements()).build();
+	}
+
+	@DELETE
+	@Path("{id}/cat/{catid}/elem/{elemid}")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response addElement(@PathParam("id") Long id, @PathParam("catid") Long catid, @PathParam("elemid") Long elemid) {
+
+		Optional<User> uOpt = userRepository.findById(id);
+		if (!uOpt.isPresent()) {
+			return Response.status(Response.Status.CONFLICT).entity("User not found, strange because you are connected.").build();
+		}
+		User u = uOpt.get();
+		
+		Category c = null;
+		
+		try {
+			c = u.getCategoryById(catid);
+		} catch (Exception ex) {
+			return Response.status(Response.Status.CONFLICT).entity("Category not found.").build();
+		}
+
+		Element el = null;
+		
+		try {
+			el = c.getElementById(elemid);
+		} catch (Exception ex) {
+			return Response.status(Response.Status.CONFLICT).entity("Element not found.").build();
+		}
+
+		c.getElements().remove(el);
+		userRepository.save(u);
+		return Response.ok("ok").build();
+	}
+
+	@POST
+	@Path("{id}/cat/{catid}/elem")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response addElement(@PathParam("id") Long id, @PathParam("catid") Long catid, @RequestBody Element e) {
+
+		Optional<User> uOpt = userRepository.findById(id);
+		if (!uOpt.isPresent()) {
+			return Response.status(Response.Status.CONFLICT).entity("User not found, strange because you are connected.").build();
+		}
+		User u = uOpt.get();
+		
+		Category c = null;
+		
+		try {
+			c = u.getCategoryById(catid);
+		} catch (Exception ex) {
+			return Response.status(Response.Status.CONFLICT).entity("Category not found.").build();
+		}
+		
+		c.getElements().add(e);
 		userRepository.save(u);
 		return Response.ok("ok").build();
 	}

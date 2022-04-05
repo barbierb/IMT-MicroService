@@ -51,4 +51,11 @@ public class Category {
 	public Long getId() {
 		return id;
 	}
+
+	public Element getElementById(Long catid) throws Exception {
+		for(Element e : elements)
+			if(e.getId() == id)
+				return e;
+		throw new Exception();
+	}
 }
