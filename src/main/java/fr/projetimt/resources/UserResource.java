@@ -1,7 +1,5 @@
 package fr.projetimt.resources;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 import javax.ws.rs.Consumes;
@@ -67,10 +65,16 @@ public class UserResource implements UserDetailsService {
 	
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public List<User> getAllUsers() {
-		List<User> users = new ArrayList<>();
-		userRepository.findAll().forEach(users::add);
-		return users;
+	public Response getUserID() {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		UserSecured user = (UserSecured)authentication.getPrincipal();
+		String username = user.getUsername();
+		
+		User u = userRepository.getUserByUsername(username);
+		if (u == null) {
+			return Response.status(Response.Status.NOT_FOUND).build();
+		}
+		return Response.ok(u).build();
 	}
 
 	@GET
@@ -105,7 +109,7 @@ public class UserResource implements UserDetailsService {
 	@POST
 	@Path("{id}/cat")
 	@Consumes(MediaType.APPLICATION_JSON)
-	@Produces(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.TEXT_PLAIN)
 	public Response addCateg(@PathParam("id") Long id, @RequestBody Category cat) {
 
 		Optional<User> uOpt = userRepository.findById(id);
@@ -122,7 +126,7 @@ public class UserResource implements UserDetailsService {
 	@DELETE
 	@Path("{id}/cat/{catid}")
 	@Consumes(MediaType.APPLICATION_JSON)
-	@Produces(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.TEXT_PLAIN)
 	public Response addCateg(@PathParam("id") Long id, @PathParam("catid") Long catid) {
 
 		Optional<User> uOpt = userRepository.findById(id);
