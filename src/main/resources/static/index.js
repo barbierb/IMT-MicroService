@@ -6,7 +6,6 @@ $(document).ready(function() {
 
 	let $subtitle = $("#ijo1ko");
 
-
 	$.ajax({
 		url: 'http://localhost:8080/api/user',
 		type: 'GET',
@@ -73,9 +72,15 @@ function updatecateg() {
 			let categs = [];
 			categs = data;
 			categs.forEach(categ => {
-				$categories.append('<div id="iq78r" class="row"><div id="itfo" class="row rowcustom"><div id="intp" class="cell cell-emoji"><div title="😃" id="idbl" class="categ-emoji"><span id="i8psl">'+categ['emoji']+'</span></div></div><div id="i4mo" class="cell cell-title"><div id="is2l" class="categ-title">'+categ['name']+'</div></div><div id="inkc" class="cell cell-bin"><div id="iancs" class="categ-bin"><h3 id="bin'+categ['id']+'" class="categ-bin">🗑️</h3></div></div></div></div>')
+				$categories.append('<div id="iq78r" class="row"><div id="itfo" class="row rowcustom"><div id="intp" class="cell cell-emoji"><div title="😃" id="idbl" class="categ-emoji"><span id="i8psl">'+categ['emoji']+'</span></div></div><div id="i4mo" class="cell cell-title"><div id="categorie'+categ['id']+'" class="categ-title">'+categ['name']+'</div></div><div id="inkc" class="cell cell-bin"><div id="iancs" class="categ-bin"><h3 id="bin'+categ['id']+'" class="categ-bin">🗑️</h3></div></div></div></div>')
 				
 				let tmpname = "#bin"+categ['id'];
+				let tmptitle = "#categorie"+categ['id'];
+				$(tmptitle).click(function(){
+					console.log(categ['id']);
+					let testg = "#ilz86";
+					$(testg).text("Catégories > "+categ['emoji']+" "+categ['name']);
+				});
 				$(tmpname).click(function(){
 					console.log(categ['id']);
 					$.ajax({
